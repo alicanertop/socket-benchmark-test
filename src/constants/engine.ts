@@ -14,8 +14,8 @@ export const ENGINE = {
   [ENGINE_KEY.io]: 'SocketIO',
   [ENGINE_KEY.default]: 'EngineNotSet',
   [ENGINE_KEY.ws]: 'NativeWebsocket',
-  [ENGINE_KEY.iouWebSocket]: 'SocketIO_uWebSocket',
-  [ENGINE_KEY.wsuWebSocket]: 'NativeWebsocket_uWebSocket',
+  [ENGINE_KEY.iouWebSocket]: 'SocketIO-uWebSocket',
+  [ENGINE_KEY.wsuWebSocket]: 'NativeWebsocket-uWebSocket',
 } as const;
 
 export type ENGINE_KEYS = keyof typeof ENGINE_KEY;
