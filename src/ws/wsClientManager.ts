@@ -10,8 +10,11 @@ import { BaseWSManager, type MESSAGE } from '../ws/baseWSManager.ts';
 
 export class WSClientManager {
   private manager = new BaseWSManager();
-  private me: { clientId: string; serverId: string };
   private wsClient: ReturnType<typeof this.manager.generateSocketClient>;
+  private me: { clientId: string; serverId: string } = {
+    clientId: 'client',
+    serverId: 'server',
+  };
 
   private openRoomListener() {
     this.wsClient.on(CHANNELS.OPEN, () => {

@@ -10,7 +10,10 @@ import { BaseSocketIOManager } from '../socketio/baseSocketIOManager.ts';
 
 export class SocketIOClientManager {
   private manager = new BaseSocketIOManager();
-  private me: { clientId: string; serverId: string };
+  private me: { clientId: string; serverId: string } = {
+    clientId: 'client',
+    serverId: 'server',
+  };
   private socketio: ReturnType<typeof this.manager.generateSocketClient>;
 
   private connectRoomListener() {
