@@ -71,7 +71,7 @@ export class LogAnalyzer {
     const data = [
       ``,
       `\tServer ID: ${serverId}`,
-      `\tEngine: ${engine}`,
+      `\tClient Engine: ${engine}`,
       `\tLogCount: ${logSize}`,
     ]
       .concat(
