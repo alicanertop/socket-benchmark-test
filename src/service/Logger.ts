@@ -10,13 +10,18 @@ import { logsFolderPath } from '../constants/file.ts';
 class Logger {
   private filePath: string;
 
-  constructor() {
+  private checkFolder() {
     if (!fs.existsSync(logsFolderPath)) {
       fs.mkdirSync(logsFolderPath);
     }
   }
 
-  log(data: BenchmarkRoomMessage | MessageRoomMessage) {
+  constructor() {
+    this.checkFolder();
+  }
+
+  async log(data: BenchmarkRoomMessage | MessageRoomMessage) {
+    this.checkFolder();
     this.filePath = `${logsFolderPath}/${data.server_engine}_${data.server_id}_${data.client_id}.log`;
 
     if (!this.filePath) return;
