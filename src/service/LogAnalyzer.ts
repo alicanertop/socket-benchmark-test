@@ -69,23 +69,24 @@ export class LogAnalyzer {
     const serverToClientStat = calculateStats(serverToClient);
 
     const data = [
-      `Server ID: ${serverId}`,
-      `Engine: ${engine}`,
-      `LogCount: ${logSize}`,
+      ``,
+      `\tServer ID: ${serverId}`,
+      `\tEngine: ${engine}`,
+      `\tLogCount: ${logSize}`,
     ]
       .concat(
         hasClientToServerData
           ? [
-              `---`,
-              `ClientToServer (HTTP to Socket Server) ms`,
-              JSON.stringify(clientToServerStat, null, 2),
+              `\t---`,
+              `\tClientToServer (HTTP to Socket Server) ms`,
+              `\t${JSON.stringify(clientToServerStat, null, 2)}`,
             ]
           : [],
         haSserverToClientData
           ? [
-              `---`,
-              `ServerToClient (Socket Server to Client) ms`,
-              JSON.stringify(serverToClientStat, null, 2),
+              `\t---`,
+              `\tServerToClient (Socket Server to Client) ms`,
+              `\t${JSON.stringify(serverToClientStat, null, 2)}`,
             ]
           : []
       )

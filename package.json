@@ -13,6 +13,7 @@
     "ws"
   ],
   "scripts": {
+    "clear":"rm -rf clientlogs result serverlogs",
     "envgenerate": "env/generate.local.env.sh",
     "envgenerate:prod": "env/generate.env.sh",
     "analyze": "node src/analyze/analyze.ts",
