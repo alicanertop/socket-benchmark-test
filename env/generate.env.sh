@@ -1,0 +1,1 @@
+./env/env.merger.sh ./env/.env.default ./env/.env.template ./.env.app ./env/.env.docker .env

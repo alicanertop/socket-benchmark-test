@@ -1,0 +1,7 @@
+const HALF_SECOND = 500;
+const ONE_SECOND = 1000;
+const ONE_MINUTE = ONE_SECOND * 60;
+
+export const CLIENT_LIVE_TIME = 30 * ONE_MINUTE;
+
+export const BENCHMARK_SEND_TIMEOUT = ONE_SECOND;

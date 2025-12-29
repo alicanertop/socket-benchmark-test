@@ -1,0 +1,1 @@
+tmux new-session -d -n "auto-jop" "npm run client $1";

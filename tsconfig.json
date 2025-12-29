@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "noEmit": true,
+    "module": "nodenext",
+    "target": "esnext",
+    "declaration": true,
+    "esModuleInterop": true,
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": ["node_modules", "dist/**/*"],
+  "include": ["./**/*.d.ts", "./src/**/*"]
+}

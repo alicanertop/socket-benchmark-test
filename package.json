@@ -1,0 +1,42 @@
+{
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "author": "Alican ERTOP",
+  "description": "Socket Benchmark Test",
+  "name": "socket-benchmark-test",
+  "version": "0.0.1",
+  "keywords": [
+    "socket",
+    "uWebSockets",
+    "socketio",
+    "ws"
+  ],
+  "scripts": {
+    "envgenerate": "env/generate.local.env.sh",
+    "envgenerate:prod": "env/generate.env.sh",
+    "analyze": "node src/analyze/analyze.ts",
+    "expressio": "npm run envgenerate && env-cmd -f .env.app node src/express/express.ts io",
+    "uwebsocketio": "npm run envgenerate && env-cmd -f .env.app node src/uWebSocketApp/uWebSocketApp.ts io",
+    "expressws": "npm run envgenerate && env-cmd -f .env.app node src/express/express.ts ws",
+    "uwebsocketws": "npm run envgenerate && env-cmd -f .env.app node src/uWebSocketApp/uWebSocketApp.ts ws",
+    "client": "env-cmd -f .env.app node src/service/SocketClientManager.ts"
+  },
+  "dependencies": {
+    "env-cmd": "11.0.0",
+    "express": "5.2.1",
+    "prettier": "3.7.4",
+    "socket.io": "4.8.3",
+    "socket.io-client": "4.8.3",
+    "tslib": "2.8.1",
+    "uuid": "13.0.0",
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.56.0"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "6.0.0",
+    "@types/express": "5.0.6",
+    "@types/node": "25.0.3",
+    "@types/ws": "8.18.1",
+    "typescript": "5.9.3"
+  }
+}

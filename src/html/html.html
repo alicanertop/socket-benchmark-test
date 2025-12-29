@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket Server Client</title>
+</head>
+
+<style>
+    :root {
+        --bg-color: #0d1117;
+        --container-bg: #161b22;
+        --border-color: #30363d;
+        --text-primary: #c9d1d9;
+        --containerShadowColor: rgba(0, 0, 0, 0.2);
+    }
+
+    body {
+        margin: 0;
+        display: flex;
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-primary);
+        background-color: var(--bg-color);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+
+    input[type="text"],
+    textarea {
+        flex: 1;
+        font-size: 14px;
+        padding: 8px 12px;
+        border-radius: 6px;
+        color: var(--text-primary);
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+    }
+
+    textarea {
+        width: 100%;
+        padding: unset;
+        min-height: 150px;
+        font-family: monospace;
+        resize: vertical;
+    }
+
+    .container {
+        width: 100%;
+        padding: 24px;
+        max-width: 600px;
+        border-radius: 6px;
+        background-color: var(--container-bg);
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 12px var(--containerShadowColor);
+    }
+
+    h1 {
+        margin-top: 0;
+        font-size: 24px;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    .control-group {
+        gap: 10px;
+        display: flex;
+        margin-bottom: 16px;
+    }
+
+    .control-group-column {
+        flex-direction: column;
+    }
+
+    button {
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 6px;
+        transition: opacity 0.2s;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .status-item {
+        display: block;
+        font-size: 14px;
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        font-family: monospace;
+        color: var(--text-primary);
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+    }
+</style>
+
+<body>
+    <div class="container">
+        <h1>Socket Server Connection Test Client</h1>
+
+        <div class="control-group">
+            <div id="status"> </div>
+        </div>
+
+        <div class="control-group control-group-column">
+
+            <div>
+                <h2>Benchmark Timeout time</h2>
+                <input type="text" id="timeouttime" placeholder="Enter Times" value="1000" />
+                <button id="timeoutsend">send</button>
+            </div>
+
+        </div>
+
+        <div class="control-group control-group-column">
+            <div>
+                <h2>Benchmark</h2>
+            </div>
+            <div>
+                <button id="benchmarkon">on</button>
+                <button id="benchmarkoff">off</button>
+                <button id="benchmarkmatch">match</button>
+                <button id="benchmarksinglechar">single char</button>
+            </div>
+        </div>
+
+        <div class="control-group control-group-column">
+            <div>
+                <h2>Custom Message</h2>
+            </div>
+            <div>
+                <textarea id="messageInput" placeholder="Enter JSON here...">{}</textarea>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <button id="send">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const WSINFO = JSON.parse(':WS_STATUS_INFO:');
+        const ROUTES = JSON.parse(':ROUTES_TEMPLATE_KEY:');
+
+        const getFetch = (url) => fetch(url);
+
+
+        const postFetch = (url, message) => {
+            let parsed;
+            try {
+                parsed = JSON.parse(message);
+            } catch (error) {
+                console.error('error', error)
+                return;
+            }
+
+            if (!parsed) {
+                console.error("No message content");
+                return;
+            }
+
+
+            return fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: message })
+            });
+        }
+
+
+        const statusDiv = document.getElementById('status');
+
+        const renderStatus = (data, prefix = '') => {
+            Object.entries(data).forEach(([key, value]) => {
+                if (typeof value === 'object' && value !== null) {
+                    renderStatus(value, prefix ? `${prefix}.${key}` : key);
+                } else {
+                    const span = document.createElement('span');
+                    span.className = 'status-item';
+                    span.textContent = prefix ? `${prefix}.${key}: ${value}` : `${key}: ${value}`;
+                    statusDiv.appendChild(span);
+                }
+            });
+        };
+
+        renderStatus(WSINFO);
+
+        const getwsInfo = () => {
+            getFetch(ROUTES.wsinfo)
+                .then(res => res.json())
+                .then(data => {
+                    statusDiv.innerHTML = '';
+                    renderStatus(data);
+                })
+                .catch(err => console.error('Error fetching status:', err));
+        }
+
+
+        // setInterval(getwsInfo, 10000);
+
+
+        const timeouttime_input = document.getElementById('timeouttime')
+        timeouttime_input.addEventListener('input', (e) => {
+            e.target.value = parseInt(e.target.value.replace(/\D/g, ''), 10) || "";
+        })
+
+        const btn_timeoutsend = document.getElementById('timeoutsend');
+        btn_timeoutsend.onclick = () => {
+            getFetch(ROUTES.benchmarktimeupdate_time.replace(':time', timeouttime_input.value))
+                .then(() => {
+                    getwsInfo()
+                })
+        }
+
+        const btn_benchmarkon = document.getElementById('benchmarkon');
+        btn_benchmarkon.onclick = () => {
+            getFetch(ROUTES.benchmarkon).then(() => {
+                getwsInfo()
+            })
+        }
+
+        const btn_benchmarkoff = document.getElementById('benchmarkoff');
+        btn_benchmarkoff.onclick = () => {
+            getFetch(ROUTES.benchmarkoff).then(() => {
+                getwsInfo()
+            })
+        }
+
+        const btn_benchmarkmatch = document.getElementById('benchmarkmatch');
+        btn_benchmarkmatch.onclick = () => {
+            getFetch(ROUTES.benchmarkmatch).then(() => {
+                getwsInfo()
+            })
+        }
+
+        const btn_benchmarksinglechar = document.getElementById('benchmarksinglechar');
+        btn_benchmarksinglechar.onclick = () => {
+            getFetch(ROUTES.benchmarksinglechar).then(() => {
+                getwsInfo()
+            })
+        }
+
+        const btn_send = document.getElementById('send');
+        btn_send.onclick = () => {
+            const messageInput = document.getElementById('messageInput').value;
+            postFetch(ROUTES.message, messageInput);
+        }
+    </script>
+</body>
+
+</html>

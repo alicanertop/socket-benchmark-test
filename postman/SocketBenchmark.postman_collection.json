@@ -1,0 +1,241 @@
+{
+	"info": {
+		"_postman_id": "fa3f0264-b099-408e-8041-312bbaac8602",
+		"name": "SocketBenchmark",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8125263"
+	},
+	"item": [
+		{
+			"name": "wsInfo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_host}}/wsInfo",
+					"host": [
+						"{{app_host}}"
+					],
+					"path": [
+						"wsInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "benchmarkon",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_host}}/benchmarkon",
+					"host": [
+						"{{app_host}}"
+					],
+					"path": [
+						"benchmarkon"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "benchmarkoff",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_host}}/benchmarkoff",
+					"host": [
+						"{{app_host}}"
+					],
+					"path": [
+						"benchmarkoff"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "benchmarkmatch",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_host}}/benchmarkmatch",
+					"host": [
+						"{{app_host}}"
+					],
+					"path": [
+						"benchmarkmatch"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "benchmarksinglechar",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_host}}/benchmarksinglechar",
+					"host": [
+						"{{app_host}}"
+					],
+					"path": [
+						"benchmarksinglechar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "benchmarktimeupdate",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_host}}/benchmarktimeupdate/:time",
+					"host": [
+						"{{app_host}}"
+					],
+					"path": [
+						"benchmarktimeupdate",
+						":time"
+					],
+					"variable": [
+						{
+							"key": "time",
+							"value": "5000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "message",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": {\n        \"t\": \"1\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_host}}/message",
+					"host": [
+						"{{app_host}}"
+					],
+					"path": [
+						"message"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "app_host",
+			"value": "http://localhost:3000"
+		}
+	]
+}
