@@ -12,7 +12,7 @@ import { jsonParse } from '../helpers/jsonParse.ts';
 import { calculateStats } from '../helpers/stats.ts';
 
 export class LogAnalyzer {
-  constructor() {
+  analyze() {
     if (!fs.existsSync(logsFolderPath)) {
       fs.mkdirSync(logsFolderPath);
     }
@@ -20,13 +20,9 @@ export class LogAnalyzer {
     if (!fs.existsSync(resultLogFolderPath)) {
       fs.mkdirSync(resultLogFolderPath);
     }
-  }
 
-  analyze() {
     const serverToClient: number[] = [];
     const clientToServer: number[] = [];
-
-    if (!fs.existsSync(logsFolderPath)) return;
 
     let engine: ENGINE_VALUES = ENGINE[ENGINE_KEY.default];
     const logList = fs.readdirSync(logsFolderPath);
