@@ -4,31 +4,55 @@ import fsPromise from 'node:fs/promises';
 import {
   type BenchmarkRoomMessage,
   type MessageRoomMessage,
+  type ServerLogMessage,
 } from '../class/index.ts';
-import { logsFolderPath } from '../constants/file.ts';
+import {
+  clientLogsFolderPath,
+  serverLogsFolderPath,
+} from '../constants/file.ts';
 
 class Logger {
-  private filePath: string;
+  private checkClientFolder() {
+    if (!fs.existsSync(clientLogsFolderPath)) {
+      fs.mkdirSync(clientLogsFolderPath);
+    }
+  }
 
-  private checkFolder() {
-    if (!fs.existsSync(logsFolderPath)) {
-      fs.mkdirSync(logsFolderPath);
+  private checkServerFolder() {
+    if (!fs.existsSync(serverLogsFolderPath)) {
+      fs.mkdirSync(serverLogsFolderPath);
     }
   }
 
   constructor() {
-    this.checkFolder();
+    this.checkClientFolder();
+    this.checkServerFolder();
   }
 
-  async log(data: BenchmarkRoomMessage | MessageRoomMessage) {
-    this.checkFolder();
-    this.filePath = `${logsFolderPath}/${data.server_engine}_${data.server_id}_${data.client_id}.log`;
+  async serverLog(data: ServerLogMessage) {
+    this.checkServerFolder();
 
-    if (!this.filePath) return;
-    fsPromise.writeFile(this.filePath, `${data.stringified}\n`, {
-      encoding: 'utf-8',
-      flag: 'a',
-    });
+    fsPromise.writeFile(
+      `${serverLogsFolderPath}/${data.server_engine}_${data.server_id}.log`,
+      `${data.stringified}\n`,
+      {
+        encoding: 'utf-8',
+        flag: 'a',
+      }
+    );
+  }
+
+  async clientLog(data: BenchmarkRoomMessage | MessageRoomMessage) {
+    this.checkClientFolder();
+
+    fsPromise.writeFile(
+      `${clientLogsFolderPath}/${data.server_engine}_${data.server_id}_${data.client_id}.log`,
+      `${data.stringified}\n`,
+      {
+        encoding: 'utf-8',
+        flag: 'a',
+      }
+    );
   }
 }
 

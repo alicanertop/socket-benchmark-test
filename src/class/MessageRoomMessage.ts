@@ -22,14 +22,15 @@ export class MessageRoomMessage implements IMessageRoomMessage {
     client_id,
     server_id,
     message_room,
+    server_engine,
     ...data
   }: IMessageRoomMessage) {
     this.message = message;
     this.message_room = message_room;
     this.client_id = client_id;
     this.server_id = server_id;
-    
-    this.server_engine = data.server_engine;
+    this.server_engine = server_engine;
+
     this.client_recieved_at = data.client_recieved_at;
     this.server_recieved_time = data.server_recieved_time;
     this.server_message_created_at = data.server_message_created_at;

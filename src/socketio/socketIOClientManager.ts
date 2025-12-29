@@ -43,7 +43,6 @@ export class SocketIOClientManager {
       onBenchmarkMessage(
         Object.assign(parsed, {
           client_id: this.me.clientId,
-          server_id: this.me.serverId,
           client_recieved_at: Date.now(),
         })
       );
@@ -58,7 +57,6 @@ export class SocketIOClientManager {
       onMessage(
         Object.assign(parsed, {
           client_id: this.me.clientId,
-          server_id: this.me.serverId,
           client_recieved_at: Date.now(),
         })
       );

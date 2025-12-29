@@ -19,14 +19,15 @@ export class BenchmarkRoomMessage implements IBenchmarkRoomMessage {
     client_id,
     server_id,
     message_room,
+    server_engine,
     ...data
   }: IBenchmarkRoomMessage) {
     this.message = message;
     this.client_id = client_id;
     this.server_id = server_id;
     this.message_room = message_room;
+    this.server_engine = server_engine;
 
-    this.server_engine = data.server_engine;
     this.client_recieved_at = data.client_recieved_at;
     this.server_message_created_at = data.server_message_created_at;
 

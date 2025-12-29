@@ -6,5 +6,5 @@ import { LoggerInstance } from '../service/Logger.ts';
 
 export const onBenchmarkMessage = (message: IBenchmarkRoomMessage) => {
   const roomMes = new BenchmarkRoomMessage(message);
-  LoggerInstance.log(roomMes);
+  LoggerInstance.clientLog(roomMes);
 };

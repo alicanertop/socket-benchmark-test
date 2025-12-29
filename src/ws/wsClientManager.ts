@@ -43,7 +43,6 @@ export class WSClientManager {
           onBenchmarkMessage(
             Object.assign(data as any, {
               client_id: this.me.clientId,
-              server_id: this.me.serverId,
               client_recieved_at: Date.now(),
             })
           );
@@ -54,7 +53,6 @@ export class WSClientManager {
           onMessage(
             Object.assign(data as any, {
               client_id: this.me.clientId,
-              server_id: this.me.serverId,
               client_recieved_at: Date.now(),
             })
           );

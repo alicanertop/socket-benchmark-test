@@ -6,11 +6,13 @@ import type {
 import uWS, { type TemplatedApp as uWSTemplatedApp } from 'uWebSockets.js';
 import { v4 } from 'uuid';
 
+import { ServerLogMessage } from '../class/ServerLogMessage.ts';
 import { CHANNELS } from '../constants/channels.ts';
 import { ENGINE, ENGINE_KEY } from '../constants/engine.ts';
 import { APP_HOST_URL, BASE_PORT, HTTP_INFO } from '../constants/envtouse.ts';
 import { ROOMS, type ROOMS_VALUES } from '../constants/rooms.ts';
 import { jsonParse } from '../helpers/jsonParse.ts';
+import { LoggerInstance } from '../service/Logger.ts';
 import {
   BaseWSManager,
   type BaseWebSocketClient,
@@ -31,23 +33,25 @@ export class WSServerManager extends BaseWSManager {
   ) {
     if (!this.clientSize) return false;
 
+    const generatedMessage: any = Object.assign({}, extraMessageParams, {
+      message,
+      message_room: room,
+      server_id: this.serverUUID,
+      server_engine: this.wsInfo.ENGINE,
+      server_message_created_at: Date.now(),
+    });
+
+    const serverLogMessage = new ServerLogMessage(generatedMessage);
+
+    const stringified = JSON.stringify([room, generatedMessage]);
+
     this.clientList.forEach((client: WebSocket) => {
       if (client.joinedRooms.has(room)) {
-        client.send(
-          JSON.stringify([
-            room,
-            {
-              ...extraMessageParams,
-              message,
-              message_room: room,
-              server_id: this.serverUUID,
-              server_engine: this.wsInfo.ENGINE,
-              server_message_created_at: Date.now(),
-            },
-          ])
-        );
+        client.send(stringified);
       }
     });
+
+    LoggerInstance.serverLog(serverLogMessage);
   }
 
   private sendMessageToRoom(message: string, serverRecievedTime: number) {

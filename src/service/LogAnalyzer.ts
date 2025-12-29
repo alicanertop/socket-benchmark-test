@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import type { IMessage } from '../@types/message.ts';
 import { ENGINE, ENGINE_KEY, type ENGINE_VALUES } from '../constants/engine.ts';
 import {
-  logsFolderPath,
+  clientLogsFolderPath,
   resultLogFolderPath,
   resultLogPath,
 } from '../constants/file.ts';
@@ -13,8 +13,8 @@ import { calculateStats } from '../helpers/stats.ts';
 
 export class LogAnalyzer {
   analyze() {
-    if (!fs.existsSync(logsFolderPath)) {
-      fs.mkdirSync(logsFolderPath);
+    if (!fs.existsSync(clientLogsFolderPath)) {
+      fs.mkdirSync(clientLogsFolderPath);
     }
 
     if (!fs.existsSync(resultLogFolderPath)) {
@@ -25,11 +25,16 @@ export class LogAnalyzer {
     const clientToServer: number[] = [];
 
     let engine: ENGINE_VALUES = ENGINE[ENGINE_KEY.default];
-    const logList = fs.readdirSync(logsFolderPath);
+    let serverId: string = 'Default server ID';
+    const logList = fs.readdirSync(clientLogsFolderPath);
     const logSize = logList.length;
 
     logList.forEach((itemName) => {
-      const itemPath = join(logsFolderPath, itemName);
+      const itemPath = join(clientLogsFolderPath, itemName);
+      const [server_engine, server_id, client_id] = itemName.split('_');
+      engine = (server_engine as ENGINE_VALUES) || ENGINE[ENGINE_KEY.default];
+      serverId = server_id || serverId;
+
       const content = fs.readFileSync(itemPath, {
         flag: 'r',
         encoding: 'utf-8',
@@ -41,7 +46,6 @@ export class LogAnalyzer {
         const parsed = jsonParse<Partial<IMessage>>(line);
         if (!parsed) return;
 
-        engine = parsed.server_engine || ENGINE[ENGINE_KEY.default];
         const serverRecievedTime = Number(parsed.server_recieved_time);
         const serverMessageCreatedAt = Number(parsed.server_message_created_at);
         const clientRecievedAt = Number(parsed.client_recieved_at);
@@ -62,6 +66,7 @@ export class LogAnalyzer {
     const serverToClientStat = calculateStats(serverToClient);
 
     const data = [
+      `Server ID: ${serverId}`,
       `Engine: ${engine}`,
       `LogCount: ${logSize}`,
       `---`,
@@ -72,7 +77,7 @@ export class LogAnalyzer {
       JSON.stringify(serverToClientStat, null, 2),
     ].join('\n');
 
-    fs.writeFileSync(resultLogPath(engine), data, {
+    fs.writeFileSync(resultLogPath(`${engine}_${serverId}`), data, {
       encoding: 'utf-8',
       flag: 'w',
     });

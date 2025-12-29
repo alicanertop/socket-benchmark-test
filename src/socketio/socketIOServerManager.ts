@@ -5,11 +5,13 @@ import type {
 } from 'http';
 import { type TemplatedApp as uWSTemplatedApp } from 'uWebSockets.js';
 
+import { ServerLogMessage } from '../class/ServerLogMessage.ts';
 import { CHANNELS, type CHANNELS_VALUES } from '../constants/channels.ts';
 import { EXPRESS_IO_CONFIG } from '../constants/config.ts';
 import { ENGINE, ENGINE_KEY } from '../constants/engine.ts';
 import { APP_HOST_URL, BASE_PORT, HTTP_INFO } from '../constants/envtouse.ts';
 import { ROOMS, type ROOMS_VALUES } from '../constants/rooms.ts';
+import { LoggerInstance } from '../service/Logger.ts';
 import {
   BaseSocketIOManager,
   type SocketClient,
@@ -24,17 +26,18 @@ export class SocketIOServerManager extends BaseSocketIOManager {
   ) {
     if (!this.clientSize) return false;
 
-    this.socket.to(room).emit(
-      room,
-      JSON.stringify({
-        ...extraMessageParams,
-        message,
-        message_room: room,
-        server_id: this.serverUUID,
-        server_engine: this.wsInfo.ENGINE,
-        server_message_created_at: Date.now(),
-      })
-    );
+    const generatedMessage: any = Object.assign({}, extraMessageParams, {
+      message,
+      message_room: room,
+      server_id: this.serverUUID,
+      server_engine: this.wsInfo.ENGINE,
+      server_message_created_at: Date.now(),
+    });
+
+    const serverLogMessage = new ServerLogMessage(generatedMessage);
+
+    this.socket.to(room).emit(room, serverLogMessage.stringifiedAll);
+    LoggerInstance.serverLog(serverLogMessage);
   }
 
   private sendMessageToRoom(message: string, serverRecievedTime: number) {
