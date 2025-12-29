@@ -62,6 +62,9 @@ export class LogAnalyzer {
       fs.rmSync(itemPath);
     });
 
+    const hasClientToServerData = Boolean(clientToServer.length);
+    const haSserverToClientData = Boolean(serverToClient.length);
+
     const clientToServerStat = calculateStats(clientToServer);
     const serverToClientStat = calculateStats(serverToClient);
 
@@ -69,13 +72,24 @@ export class LogAnalyzer {
       `Server ID: ${serverId}`,
       `Engine: ${engine}`,
       `LogCount: ${logSize}`,
-      `---`,
-      `ClientToServer (HTTP to Socket Server) ms`,
-      JSON.stringify(clientToServerStat, null, 2),
-      `---`,
-      `ServerToClient (Socket Server to Client) ms`,
-      JSON.stringify(serverToClientStat, null, 2),
-    ].join('\n');
+    ]
+      .concat(
+        hasClientToServerData
+          ? [
+              `---`,
+              `ClientToServer (HTTP to Socket Server) ms`,
+              JSON.stringify(clientToServerStat, null, 2),
+            ]
+          : [],
+        haSserverToClientData
+          ? [
+              `---`,
+              `ServerToClient (Socket Server to Client) ms`,
+              JSON.stringify(serverToClientStat, null, 2),
+            ]
+          : []
+      )
+      .join('\n');
 
     fs.writeFileSync(resultLogPath(`${engine}_${serverId}`), data, {
       encoding: 'utf-8',
